@@ -3,6 +3,10 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route('/')
+def login():
+    return render_template('login.html')
+
+@app.route('/home')
 def index():
     return render_template('index.html')
 
@@ -13,10 +17,6 @@ def about():
 @app.route('/donation')
 def donation():
     return render_template('donation.html')
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
 
 @app.route('/menu')
 def menu():
