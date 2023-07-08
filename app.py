@@ -71,8 +71,7 @@ def signup_post():
     cur.execute('INSERT INTO user (u_id,u_name, u_email, u_pass) VALUES (%s, %s, %s, %s)', (user_id, name, email, password))
     mysql.connection.commit()
     cur.close()
-    success_message = 'Account created successfully. Please log in.'
-    return render_template('login.html', success_message=success_message)
+    return render_template('login.html')
 
 
 if __name__ == '__main__':
