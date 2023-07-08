@@ -11,22 +11,25 @@
 <body>
 	<div class="container" id="container">
 		<div class="form-container sign-up-container">
-			<form action="#">
+			<form action="{{ url_for('signup_post') }}" method="POST">
 				<h1>Create Account</h1>
-				<input type="text" placeholder="Name" />
-				<input type="email" placeholder="Email" />
-				<input type="password" placeholder="Password" />
+				<input type="text" name="name" placeholder="Name" required />
+				<input type="email" name="email" placeholder="Email" required />
+				<input type="password" name="password" placeholder="Password" required />
 				<button>Sign Up</button>
 			</form>
 		</div>
 		<div class="form-container sign-in-container">
-			<form action="#">
+			<form action="{{ url_for('login_post') }}" method="POST">
 				<h1>Sign in</h1>
-				<input type="email" placeholder="Email" />
-				<input type="password" placeholder="Password" />
+				<input type="email" name="email" placeholder="Email" required />
+				<input type="password" name="password" placeholder="Password" required />
 				<a href="#">Forgot your password?</a>
 				<button>Sign In</button>
 				<a href="{{ url_for('index') }}">Continue as Guest</a>
+				{% if error %}
+					<p class="error-message">{{ error }}</p>
+				{% endif %}
 			</form>
 		</div>
 		<div class="overlay-container">
