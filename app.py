@@ -76,7 +76,7 @@ def profile():
         loc = result4[0] if result4 else 'GUEST'
         return render_template('profile.html', name=name, email=email,dob=dob,phone=phone,loc=loc)
     else:
-        return render_template('profile.html', name='GUEST')
+        return render_template('profile.html', name='GUEST',email='GUEST',dob='GUEST',phone='GUEST',loc='GUEST')
 
 
 @app.route('/login', methods=['POST'])
