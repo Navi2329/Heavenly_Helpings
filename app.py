@@ -89,6 +89,7 @@ def update_profile():
         location = data.get('location')
         dob = data.get('dob')
         phone = data.get('phone')
+        print(dob)
 
         # Convert the dob string to a datetime object
         dob_date = datetime.datetime.strptime(dob, '%Y-%m-%d').date()

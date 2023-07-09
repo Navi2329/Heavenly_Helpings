@@ -245,6 +245,27 @@
         phone: phoneInput.value
       };
 
+      // Check if the location input field is empty
+      if (!locationInput.value.trim()) {
+        // Assign the existing location value to the location variable
+        const locationField = document.querySelector(".profile-location");
+        data.location = locationField.textContent;
+      }
+
+      // Check if the dob input field is empty
+      if (!dobInput.value.trim()) {
+        // Assign the existing dob value to the dob variable
+        const dobField = document.querySelector(".profile-dob");
+        data.dob = dobField.textContent;
+      }
+
+      // Check if the phone input field is empty
+      if (!phoneInput.value.trim()) {
+        // Assign the existing phone value to the phone variable
+        const phoneField = document.querySelector(".profile-phone");
+        data.phone = phoneField.textContent;
+      }
+
       // Send an AJAX request to the Flask route
       $.ajax({
         url: '/update_profile',
@@ -261,10 +282,6 @@
           const phoneField = document.querySelector(".profile-phone");
           const editBtn = document.querySelectorAll(".edit-btn");
 
-          locationField.textContent = locationInput.value;
-          dobField.textContent = dobInput.value;
-          phoneField.textContent = phoneInput.value;
-
           locationInput.style.display = "none";
           dobInput.style.display = "none";
           phoneInput.style.display = "none";
@@ -279,6 +296,7 @@
           }
           const saveBtn = document.querySelector(".save-btn");
           saveBtn.style.display = "none";
+          window.location.reload();
         },
         error: function (error) {
           // Handle the error if needed
@@ -286,6 +304,8 @@
         }
       });
     }
+
+
 
 
 
