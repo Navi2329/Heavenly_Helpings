@@ -53,13 +53,24 @@ def profile():
     # Check if the user is logged in
     if 'email' in session:
         email = session['email']
-        print(email)
         query = "SELECT u_name FROM user WHERE u_email = %s"
+        query1 = "SELECT u_email FROM user WHERE u_email = %s"
+        query2 = "SELECT dob FROM user WHERE u_email = %s"
+        query3 = "SELECT u_pno FROM user WHERE u_email = %s"
         cur = mysql.connection.cursor()
         cur.execute(query, (email,))
         result = cur.fetchone()
         name = result[0] if result else 'GUEST'
-        return render_template('profile.html', name=name)
+        cur.execute(query1, (email,))
+        result1 = cur.fetchone()
+        email = result1[0] if result1 else 'GUEST'
+        cur.execute(query2, (email,))
+        result2 = cur.fetchone()
+        dob = result2[0] if result2 else 'GUEST'
+        cur.execute(query3, (email,))
+        result3 = cur.fetchone()
+        phone = result3[0] if result3 else 'GUEST'
+        return render_template('profile.html', name=name, email=email,dob=dob,phone=phone)
     else:
         return render_template('profile.html', name='GUEST')
 
