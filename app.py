@@ -47,6 +47,7 @@ def services():
 def team():
     return render_template('team.html')
 
+
 @app.route('/profile')
 def profile():
     return render_template('profile.html')
@@ -85,6 +86,7 @@ def signup_post():
     mysql.connection.commit()
     cur.close()
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
