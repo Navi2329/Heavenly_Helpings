@@ -254,6 +254,31 @@
         success: function (response) {
           // Handle the response if needed
           console.log(response);
+
+          // Hide the input fields and show the span elements again
+          const locationField = document.querySelector(".profile-location");
+          const dobField = document.querySelector(".profile-dob");
+          const phoneField = document.querySelector(".profile-phone");
+          const editBtn = document.querySelectorAll(".edit-btn");
+
+          locationField.textContent = locationInput.value;
+          dobField.textContent = dobInput.value;
+          phoneField.textContent = phoneInput.value;
+
+          locationInput.style.display = "none";
+          dobInput.style.display = "none";
+          phoneInput.style.display = "none";
+
+          locationField.style.display = "inline-block";
+          dobField.style.display = "inline-block";
+          phoneField.style.display = "inline-block";
+
+          // Show the edit buttons and hide the save button
+          for (let i = 0; i < editBtn.length; i++) {
+            editBtn[i].style.display = "inline-block";
+          }
+          const saveBtn = document.querySelector(".save-btn");
+          saveBtn.style.display = "none";
         },
         error: function (error) {
           // Handle the error if needed
@@ -261,6 +286,7 @@
         }
       });
     }
+
 
 
 
