@@ -80,31 +80,20 @@ def profile():
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
-    # Check if the user is logged in
     if 'email' in session:
         email = session['email']
         data = request.get_json()
-
-        # Get the updated values from the data object
         location = data.get('location')
         dob = data.get('dob')
         phone = data.get('phone')
-        print(dob)
-
-        # Convert the dob string to a datetime object
         dob_date = datetime.datetime.strptime(dob, '%Y-%m-%d').date()
-
-        # Update the profile values in the database
         cur = mysql.connection.cursor()
         cur.execute("UPDATE user SET location = %s, dob = %s, u_pno = %s WHERE u_email = %s",
                     (location, dob_date, phone, email))
         mysql.connection.commit()
         cur.close()
-
-        # Return a success response
         return jsonify({'message': 'Profile updated successfully'})
     else:
-        # Return an error response if the user is a guest
         return jsonify({'error': 'Guest user cannot update profile'})
 
 
@@ -150,4 +139,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
