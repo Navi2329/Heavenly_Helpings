@@ -75,7 +75,7 @@ def signup_post():
     email = request.form.get('email')
     password = request.form.get('password')
     cur = mysql.connection.cursor()
-    user_id = random.randint(1, 999999)
+    user_id = random.randint(1011, 999999)
     cur.execute('SELECT * FROM user WHERE u_email = %s', (email,))
     user = cur.fetchone()
     if user:
