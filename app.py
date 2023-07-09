@@ -47,6 +47,10 @@ def services():
 def team():
     return render_template('team.html')
 
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 
 @app.route('/login', methods=['POST'])
 def login_post():
@@ -81,6 +85,11 @@ def signup_post():
     mysql.connection.commit()
     cur.close()
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect('/')
 
 
 if __name__ == '__main__':
