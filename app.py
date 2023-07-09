@@ -50,7 +50,17 @@ def team():
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html')
+    # Check if the user is logged in
+    if 'email' in session:
+        email = session['email']
+        query = "SELECT u_name FROM user WHERE u_email = %s"
+        cur = mysql.connection.cursor()
+        cur.execute(query, (email,))
+        result = cur.fetchone()
+        name = result[0] if result else 'GUEST'
+        return render_template('profile.html', name=name)
+    else:
+        return render_template('profile.html', name='GUEST')
 
 
 @app.route('/login', methods=['POST'])
