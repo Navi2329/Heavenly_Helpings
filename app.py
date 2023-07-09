@@ -57,6 +57,7 @@ def profile():
         query1 = "SELECT u_email FROM user WHERE u_email = %s"
         query2 = "SELECT dob FROM user WHERE u_email = %s"
         query3 = "SELECT u_pno FROM user WHERE u_email = %s"
+        query4 = "SELECT location FROM user WHERE u_email = %s"
         cur = mysql.connection.cursor()
         cur.execute(query, (email,))
         result = cur.fetchone()
@@ -70,7 +71,10 @@ def profile():
         cur.execute(query3, (email,))
         result3 = cur.fetchone()
         phone = result3[0] if result3 else 'GUEST'
-        return render_template('profile.html', name=name, email=email,dob=dob,phone=phone)
+        cur.execute(query4, (email,))
+        result4 = cur.fetchone()
+        loc = result4[0] if result4 else 'GUEST'
+        return render_template('profile.html', name=name, email=email,dob=dob,phone=phone,loc=loc)
     else:
         return render_template('profile.html', name='GUEST')
 
