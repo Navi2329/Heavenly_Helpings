@@ -53,6 +53,7 @@ def profile():
     # Check if the user is logged in
     if 'email' in session:
         email = session['email']
+        print(email)
         query = "SELECT u_name FROM user WHERE u_email = %s"
         cur = mysql.connection.cursor()
         cur.execute(query, (email,))
@@ -72,7 +73,7 @@ def login_post():
     user = cur.fetchone()
     cur.close()
     if user and password == user[4]:
-        session['user'] = email
+        session['email'] = email
         return redirect('/home')
     else:
         error = 'Invalid email or password. Please try again.'
@@ -100,7 +101,7 @@ def signup_post():
 
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
+    session.pop('email', None)
     return redirect('/')
 
 
