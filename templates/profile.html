@@ -233,30 +233,36 @@
     }
 
     function saveField() {
-      // Save the changes and update the UI
+      // Get the field values
       const locationInput = document.querySelector(".profile-location + .input-field");
+      const dobInput = document.querySelector(".profile-dob + .input-field");
       const phoneInput = document.querySelector(".profile-phone + .input-field");
-      const locationSpan = document.querySelector(".profile-location");
-      const phoneSpan = document.querySelector(".profile-phone");
-      const editBtns = document.querySelectorAll(".edit-btn");
-      const saveBtn = document.querySelector(".save-btn");
 
-      // Update the values
-      locationSpan.textContent = locationInput.value;
-      phoneSpan.textContent = phoneInput.value;
+      // Create a data object with the updated values
+      const data = {
+        location: locationInput.value,
+        dob: dobInput.value,
+        phone: phoneInput.value
+      };
 
-      // Hide the input fields and show the span elements
-      locationInput.style.display = "none";
-      phoneInput.style.display = "none";
-      locationSpan.style.display = "inline-block";
-      phoneSpan.style.display = "inline-block";
-
-      // Show the edit buttons and hide the save button
-      for (let i = 0; i < editBtns.length; i++) {
-        editBtns[i].style.display = "inline-block";
-      }
-      saveBtn.style.display = "none";
+      // Send an AJAX request to the Flask route
+      $.ajax({
+        url: '/update_profile',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function (response) {
+          // Handle the response if needed
+          console.log(response);
+        },
+        error: function (error) {
+          // Handle the error if needed
+          console.log(error);
+        }
+      });
     }
+
+
 
     function enableSaveButton() {
       const editBtns = document.querySelectorAll(".edit-btn");

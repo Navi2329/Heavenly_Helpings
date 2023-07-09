@@ -1,4 +1,4 @@
-import random
+import random,datetime
 from flask import Flask, jsonify, render_template, request, redirect, session
 from flask_mysqldb import MySQL
 
@@ -74,9 +74,37 @@ def profile():
         cur.execute(query4, (email,))
         result4 = cur.fetchone()
         loc = result4[0] if result4 else 'GUEST'
-        return render_template('profile.html', name=name, email=email,dob=dob,phone=phone,loc=loc)
+        return render_template('profile.html', name=name, email=email, dob=dob, phone=phone, loc=loc)
     else:
-        return render_template('profile.html', name='GUEST',email='GUEST',dob='GUEST',phone='GUEST',loc='GUEST')
+        return render_template('profile.html', name='GUEST', email='GUEST', dob='GUEST', phone='GUEST', loc='GUEST')
+
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    # Check if the user is logged in
+    if 'email' in session:
+        email = session['email']
+        data = request.get_json()
+
+        # Get the updated values from the data object
+        location = data.get('location')
+        dob = data.get('dob')
+        phone = data.get('phone')
+
+        # Convert the dob string to a datetime object
+        dob_date = datetime.datetime.strptime(dob, '%Y-%m-%d').date()
+
+        # Update the profile values in the database
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE user SET location = %s, dob = %s, u_pno = %s WHERE u_email = %s",
+                    (location, dob_date, phone, email))
+        mysql.connection.commit()
+        cur.close()
+
+        # Return a success response
+        return jsonify({'message': 'Profile updated successfully'})
+    else:
+        # Return an error response if the user is a guest
+        return jsonify({'error': 'Guest user cannot update profile'})
 
 
 @app.route('/login', methods=['POST'])
