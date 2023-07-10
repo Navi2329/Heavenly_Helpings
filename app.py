@@ -1,6 +1,9 @@
-import random,datetime
+import random
+import datetime
 from flask import Flask, jsonify, render_template, request, redirect, session
 from flask_mysqldb import MySQL
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'h#3gR52m$Pq56wJ@v^*8x4p$^Sb5&vK9'
@@ -11,6 +14,9 @@ app.config['MYSQL_HOST'] = 'dbms-project.mysql.database.azure.com'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_DB'] = 'db'
 mysql = MySQL(app)
+
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 @app.route('/')
@@ -47,36 +53,25 @@ def services():
 def team():
     return render_template('team.html')
 
-
 @app.route('/profile')
 def profile():
     # Check if the user is logged in
     if 'email' in session:
         email = session['email']
-        query = "SELECT u_name FROM user WHERE u_email = %s"
-        query1 = "SELECT u_email FROM user WHERE u_email = %s"
-        query2 = "SELECT dob FROM user WHERE u_email = %s"
-        query3 = "SELECT u_pno FROM user WHERE u_email = %s"
-        query4 = "SELECT location FROM user WHERE u_email = %s"
+        query = "SELECT u_name, u_email, dob, u_pno, location, u_profile_photo,roles FROM user WHERE u_email = %s"
         cur = mysql.connection.cursor()
         cur.execute(query, (email,))
         result = cur.fetchone()
-        name = result[0] if result else 'GUEST'
-        cur.execute(query1, (email,))
-        result1 = cur.fetchone()
-        email = result1[0] if result1 else 'GUEST'
-        cur.execute(query2, (email,))
-        result2 = cur.fetchone()
-        dob = result2[0] if result2 else 'GUEST'
-        cur.execute(query3, (email,))
-        result3 = cur.fetchone()
-        phone = result3[0] if result3 else 'GUEST'
-        cur.execute(query4, (email,))
-        result4 = cur.fetchone()
-        loc = result4[0] if result4 else 'GUEST'
-        return render_template('profile.html', name=name, email=email, dob=dob, phone=phone, loc=loc)
+        if result:
+            name, email, dob, phone, loc, profile_photo,roles = result
+        else:
+            name, email, dob, phone, loc, profile_photo,roles = 'GUEST', 'GUEST', 'GUEST', 'GUEST', 'GUEST', None
+        cur.close()
+        return render_template('profile.html', name=name, email=email, dob=dob, phone=phone, loc=loc, profile_photo=profile_photo,roles=roles)
     else:
-        return render_template('profile.html', name='GUEST', email='GUEST', dob='GUEST', phone='GUEST', loc='GUEST')
+        return render_template('profile.html', name='GUEST', email='GUEST', dob='GUEST', phone='GUEST', loc='GUEST', profile_photo=None,roles='GUEST')
+
+
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
@@ -95,6 +90,32 @@ def update_profile():
         return jsonify({'message': 'Profile updated successfully'})
     else:
         return jsonify({'error': 'Guest user cannot update profile'})
+
+
+@app.route('/update_profile_picture', methods=['POST'])
+def update_profile_picture():
+    if 'email' in session:
+        email = session['email']
+        file = request.files.get('profile_picture')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            relative_path = "uploads/" + filename
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE user SET u_profile_photo = %s WHERE u_email = %s",
+                        (relative_path, email))
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({'success': True, 'profile_photo': relative_path})
+        else:
+            return jsonify({'success': False, 'message': 'Invalid file format or no file selected'})
+    else:
+        return jsonify({'success': False, 'error': 'Guest user cannot update profile'})
+
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 @app.route('/login', methods=['POST'])
