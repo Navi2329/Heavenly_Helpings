@@ -53,6 +53,7 @@ def services():
 def team():
     return render_template('team.html')
 
+
 @app.route('/profile')
 def profile():
     # Check if the user is logged in
@@ -63,14 +64,31 @@ def profile():
         cur.execute(query, (email,))
         result = cur.fetchone()
         if result:
-            name, email, dob, phone, loc, profile_photo,roles = result
+            name, email, dob, phone, loc, profile_photo, roles = result
         else:
-            name, email, dob, phone, loc, profile_photo,roles = 'GUEST', 'GUEST', 'GUEST', 'GUEST', 'GUEST', None
+            name, email, dob, phone, loc, profile_photo, roles = 'GUEST', 'GUEST', 'GUEST', 'GUEST', 'GUEST', None
         cur.close()
-        return render_template('profile.html', name=name, email=email, dob=dob, phone=phone, loc=loc, profile_photo=profile_photo,roles=roles)
+        return render_template(
+            'profile.html',
+            name=name,
+            email=email,
+            dob=dob,
+            phone=phone,
+            loc=loc,
+            profile_photo=profile_photo,
+            roles=roles
+        )
     else:
-        return render_template('profile.html', name='GUEST', email='GUEST', dob='GUEST', phone='GUEST', loc='GUEST', profile_photo=None,roles='GUEST')
-
+        return render_template(
+            'profile.html',
+            name='GUEST',
+            email='GUEST',
+            dob='GUEST',
+            phone='GUEST',
+            loc='GUEST',
+            profile_photo=None,
+            roles='GUEST'
+        )
 
 
 @app.route('/update_profile', methods=['POST'])
@@ -83,8 +101,10 @@ def update_profile():
         phone = data.get('phone')
         dob_date = datetime.datetime.strptime(dob, '%Y-%m-%d').date()
         cur = mysql.connection.cursor()
-        cur.execute("UPDATE user SET location = %s, dob = %s, u_pno = %s WHERE u_email = %s",
-                    (location, dob_date, phone, email))
+        cur.execute(
+            "UPDATE user SET location = %s, dob = %s, u_pno = %s WHERE u_email = %s",
+            (location, dob_date, phone, email)
+        )
         mysql.connection.commit()
         cur.close()
         return jsonify({'message': 'Profile updated successfully'})
@@ -102,8 +122,10 @@ def update_profile_picture():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             relative_path = "uploads/" + filename
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE user SET u_profile_photo = %s WHERE u_email = %s",
-                        (relative_path, email))
+            cur.execute(
+                "UPDATE user SET u_profile_photo = %s WHERE u_email = %s",
+                (relative_path, email)
+            )
             mysql.connection.commit()
             cur.close()
             return jsonify({'success': True, 'profile_photo': relative_path})
@@ -111,7 +133,6 @@ def update_profile_picture():
             return jsonify({'success': False, 'message': 'Invalid file format or no file selected'})
     else:
         return jsonify({'success': False, 'error': 'Guest user cannot update profile'})
-
 
 
 def allowed_file(filename):
@@ -146,8 +167,10 @@ def signup_post():
     if user:
         error = 'Email already exists. Please log in or use a different email.'
         return render_template('login.html', error=error)
-    cur.execute('INSERT INTO user (u_id,u_name, u_email, u_pass) VALUES (%s, %s, %s, %s)',
-                (user_id, name, email, password))
+    cur.execute(
+        'INSERT INTO user (u_id,u_name, u_email, u_pass) VALUES (%s, %s, %s, %s)',
+        (user_id, name, email, password)
+    )
     mysql.connection.commit()
     cur.close()
     return render_template('login.html')
@@ -158,6 +181,34 @@ def logout():
     session.pop('email', None)
     return redirect('/')
 
+
+@app.route('/search_temples', methods=['POST'])
+def search_temples():
+    if 'email' in session:
+        temple_name = request.form.get('temple_name')
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT t_name, t_add, history FROM temple WHERE t_name LIKE %s", (f"%{temple_name}%",))
+        temples = cur.fetchall()
+        cur.close()
+        return render_template('temple.html', temples=temples)
+    else:
+        return redirect('/')
+
+@app.route('/temples', methods=['GET', 'POST'])
+def temples():
+    if request.method == 'POST':
+        search_input = request.form.get('search_input')
+        if search_input:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT t_name, t_add, history FROM temple WHERE t_name LIKE %s", (f'%{search_input}%',))
+            filtered_temples = cur.fetchall()
+            cur.close()
+            return render_template('temple.html', temples=temples, filtered_temples=filtered_temples)
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT t_name, t_add, history FROM temple")
+    temples = cur.fetchall()
+    cur.close()
+    return render_template('temple.html', temples=temples)
 
 if __name__ == '__main__':
     app.run(debug=True)
