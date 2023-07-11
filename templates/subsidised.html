@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Temples</title>
+    <title>Subsidized Food Centers</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.css') }}"
@@ -14,8 +14,8 @@
       href="{{ url_for('static', filename='css/style.min.css') }}"
     />
   </head>
-
   <body>
+    <!-- Navbar -->
     <!-- Navbar -->
     <nav id="navbar-header" class="navbar navbar-expand-lg">
       <div class="container">
@@ -74,7 +74,7 @@
                   <a class="dropdown-item" href="{{ url_for('temples') }}"
                     >Explore Temples Around You</a
                   >
-                  <a class="dropdown-item" href="{{ url_for('subsidised') }}"
+                  <a class="dropdown-item" href="{{ url_for('services') }}"
                     >Explore Subsidised food centers Around You</a
                   >
                 </div>
@@ -140,7 +140,7 @@
         <div class="row">
           <div class="col-lg-8 offset-lg-2">
             <form
-              action="{{ url_for('search_temples') }}"
+              action="{{ url_for('search_centers') }}"
               method="POST"
               class="search-form"
             >
@@ -160,33 +160,21 @@
         </div>
       </div>
     </section>
-
-    <!-- Temples List -->
-    <!-- Temples List -->
-    <section id="temples-list" class="section-padding">
+    <div></div>
+    <!-- Subsidized Food Centers List -->
+    <section id="subsidized-food-centers" class="section-padding">
       <div class="container">
         <div class="row">
           <div class="col-lg-8 offset-lg-2">
-            <h2 class="section-title">Available Temples</h2>
-            {% if filtered_temples %}
-            <div class="temple-list">
-              <h3 class="filtered-title">Filtered Temples:</h3>
-              {% for temple in filtered_temples %}
-              <div class="temple-item">
-                <h3 class="temple-name">{{ temple[0] }}</h3>
-                <p class="temple-location">{{ temple[1] }}</p>
-                <p class="temple-description">{{ temple[2] }}</p>
-              </div>
-              {% endfor %}
-            </div>
-            {% endif %}
-            <div class="temple-list">
-              <h3 class="all-title">All Temples:</h3>
-              {% for temple in temples %}
-              <div class="temple-item">
-                <h3 class="temple-name">{{ temple[0] }}</h3>
-                <p class="temple-location">{{ temple[1] }}</p>
-                <p class="temple-description">{{ temple[2] }}</p>
+            <h2 class="section-title">Subsidized Food Centers</h2>
+            <div class="food-center-list">
+              {% for center in subsidized_centers %}
+              <div class="food-center-item">
+                <h3 class="food-center-name">{{ center[2] }}</h3>
+                <p class="food-center-location">{{ center[3] }}</p>
+                <p class="food-center-phone">{{ center[4] }}</p>
+                <p class="food-center-food-item">{{ center[5] }}</p>
+                <p class="food-center-rate">Rate: ${{ center[6] }}</p>
               </div>
               {% endfor %}
             </div>

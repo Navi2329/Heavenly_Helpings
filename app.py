@@ -210,5 +210,38 @@ def temples():
     cur.close()
     return render_template('temple.html', temples=temples)
 
+
+
+@app.route('/search_centers', methods=['POST'])
+def search_centers():
+    if 'email' in session:
+        temple_name = request.form.get('temple_name')
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM subsidised_food WHERE s_name LIKE %s", (f"%{temple_name}%",))
+        temples = cur.fetchall()
+        cur.close()
+        return render_template('subsidised.html', subsidized_centers=temples)
+    else:
+        return redirect('/')
+
+@app.route('/subsidised', methods=['GET', 'POST'])
+def subsidised():
+    if request.method == 'POST':
+        search_input = request.form.get('search_input')
+        if search_input:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM subsidised_food WHERE s_name LIKE %s", (f'%{search_input}%',))
+            filtered_temples = cur.fetchall()
+            cur.close()
+            return render_template('subsidised.html', temples=temples, filtered_temples=filtered_temples)
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM subsidised_food")
+    temples = cur.fetchall()
+    cur.close()
+    return render_template('subsidised.html', subsidized_centers=temples)
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
