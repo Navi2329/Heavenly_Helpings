@@ -7,8 +7,6 @@
     <title>Home Page</title>
     <meta name="description" content="Resto">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- External CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/owlcarousel/owl.carousel.min.css') }}">
@@ -16,25 +14,18 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/brands.css">
-
-    <!-- Fonts -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Josefin+Sans:300,400,700">
     <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
-
-    <!-- Modernizr JS for IE8 support of HTML5 elements and media queries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
 </head>
 
 <body data-spy="scroll" data-target="#navbar" class="static-layout">
     <div id="side-nav" class="sidenav">
         <a href="javascript:void(0)" id="side-nav-close">&times;</a>
-
         <div class="sidenav-content">
             <p>
                 Kuncen WB1, Wirobrajan 10010, DIY
@@ -49,7 +40,6 @@
         <a href="javascript:void(0)" id="side-search-close">&times;</a>
         <div class="sidenav-content">
             <form action="">
-
                 <div class="input-group md-form form-sm form-2 pl-0">
                     <input class="form-control my-0 py-1 red-border" type="text" placeholder="Search"
                         aria-label="Search">
@@ -59,11 +49,8 @@
                         </button>
                     </div>
                 </div>
-
             </form>
         </div>
-
-
     </div>
     <div id="canvas-overlay"></div>
     <div class="boxed-page">
@@ -77,7 +64,6 @@
                     aria-label="Toggle navigation">
                     <span class="lnr lnr-menu"></span>
                 </button>
-
                 <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
                     <ul class="navbar-nav d-flex justify-content-between">
                         <li class="nav-item only-desktop">
@@ -90,24 +76,23 @@
                                 <a class="nav-link" href="{{ url_for('about') }}">About</a>
                             </li>
                             <li class="nav-item active">
-                                <a class="nav-link" href="{{ url_for('index') }}">Home
-                                    <span class="sr-only">(current)</span>
-                                </a>
+                                <a class="nav-link" href="{{ url_for('index') }}">Home <span
+                                        class="sr-only">(current)</span></a>
                             </li>
-
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Our Services
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ url_for('temples') }}">Explore Temples Around You</a>
-                                    <a class="dropdown-item" href="{{ url_for('subsidised') }}">Explore Subsidised food centers Around You</a>
+                                    <a class="dropdown-item" href="{{ url_for('temples') }}">Explore Temples Around
+                                        You</a>
+                                    <a class="dropdown-item" href="{{ url_for('subsidised') }}">Explore Subsidised food
+                                        centers Around You</a>
                                 </div>
                             </li>
                         </div>
                     </ul>
-
                     <a class="navbar-brand navbar-brand-center d-flex align-items-center only-desktop" href="#">
                         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="">
                     </a>
@@ -128,8 +113,8 @@
                                     Profile
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="nav-link" href="{{ url_for('profile') }}">Your Profile</a>
-                                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                                    <a class="dropdown-item" href="{{ url_for('profile') }}">Your Profile</a>
+                                    <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
                                 </div>
                             </li>
                         </div>
@@ -144,14 +129,13 @@
         </nav>
         <div class="hero">
             <div class="container">
-                <div classclass="row d-flex align-items-center">
+                <div class="row d-flex align-items-center">
                     <div class="col-lg-6 hero-left">
                         <h1 class="display-4 mb-5">We Love <br>Filling Hearts!</h1>
                         <div class="mb-2">
                             <a class="btn btn-primary btn-shadow btn-lg" href="{{ url_for('about') }}"
                                 role="button">Explore</a>
                         </div>
-
                         <ul class="hero-info list-unstyled d-flex text-center mb-0">
                             <li class="border-right">
                                 <span class="lnr lnr-rocket"></span>
@@ -172,7 +156,6 @@
                                 </h5>
                             </li>
                         </ul>
-
                     </div>
                     <div class="col-lg-6 hero-right">
                         <div class="owl-carousel owl-theme hero-carousel">
@@ -190,7 +173,8 @@
                 </div>
             </div>
         </div>
-        <!-- Welcome Section -->
+
+
         <section id="gtco-welcome" class="bg-white section-padding">
             <div class="container">
                 <div class="section-content">
@@ -213,7 +197,6 @@
                                     shop for their alms giving needs. With the increasing number of people seeking
                                     assistance with food, this platform serves as a valuable resource for those who wish
                                     to contribute to this virtuous act..</p>
-
                             </div>
                         </div>
                     </div>
@@ -265,7 +248,7 @@
                 </div>
             </div>
         </section>
-        <!-- Testimonial Section-->
+
         <section id="gtco-testimonial" class="overlay bg-fixed section-padding"
             style="background-image: url({{ url_for('static', filename='img/testi-bg.jpg') }});">
             <div class="container">
@@ -279,7 +262,6 @@
                         </h2>
                     </div>
                     <div class="row">
-                        <!-- Testimonial -->
                         <div class="testi-content testi-carousel owl-carousel">
                             <div class="testi-item">
                                 <i class="testi-icon fa fa-3x fa-quote-left"></i>
@@ -290,18 +272,17 @@
                             </div>
                             <div class="testi-item">
                                 <i class="testi-icon fa fa-3x fa-quote-left"></i>
-                                <p class="testi-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                    Adipisci non doloribus ut, alias doloremque perspiciatis.</p>
+                                <p class="testi-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci
+                                    non doloribus ut, alias doloremque perspiciatis.</p>
                                 <p class="testi-author">Mary Jane</p>
                                 <p class="testi-desc">CTO of <span>Unidentity Inc</span></p>
                             </div>
                         </div>
-                        <!-- Endof Testimonial -->
                     </div>
                 </div>
             </div>
         </section>
-        <!-- End of Team Section --> <!-- Reservation Section -->
+
         <section id="gtco-reservation" class="bg-fixed bg-white section-padding overlay"
             style="background-image: url({{ url_for('static', filename='img/reservation-bg.jpg') }});">
             <div class="container">
@@ -342,7 +323,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6 form-group">
                                         <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
                                             <input type="text" class="form-control datetimepicker-input"
@@ -355,7 +335,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-12 form-group">
                                         <select class="form-control" id="selectPerson">
                                             <option></option>
@@ -366,7 +345,6 @@
                                             <option>5</option>
                                         </select>
                                     </div>
-
                                     <div class="col-md-12 form-group">
                                         <textarea class="form-control" id="message" name="message" rows="6"
                                             placeholder="Your Message ..."></textarea>
@@ -380,10 +358,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
-        <!-- End of Reservation Section -->
         <footer class="mastfoot pb-5 bg-white section-padding pb-0">
             <div class="inner container">
                 <div class="row">
@@ -392,15 +368,12 @@
                             <img src="{{ url_for('static', filename='img/logo.png') }}"
                                 class="img-fluid footer-logo mb-3" alt="">
                             <p>the Heavenly Helpings project represents a powerful tool for both individuals seeking
-                                alms
-                                and those wishing to contribute. By creating a user-friendly website that incorporates
-                                advanced search capabilities and an intelligent subsidiary food shop recommendation
-                                system,
-                                the platform bridges the gap between those in need and the resources available to them.
-                                With
-                                its comprehensive features and streamlined functionality, this project aims to promote
-                                the
-                                noble act of alms giving and foster a more compassionate society.</p>
+                                alms and those wishing to contribute. By creating a user-friendly website that
+                                incorporates advanced search capabilities and an intelligent subsidiary food shop
+                                recommendation system, the platform bridges the gap between those in need and the
+                                resources available to them. With its comprehensive features and streamlined
+                                functionality, this project aims to promote the noble act of alms giving and foster a
+                                more compassionate society.</p>
                             <nav class="nav nav-mastfoot justify-content-start">
                                 <a class="nav-link" href="#">
                                     <i class="fab fa-facebook-f"></i>
@@ -413,9 +386,7 @@
                                 </a>
                             </nav>
                         </div>
-
                     </div>
-
                     <div class="col-lg-4">
                         <div class="footer-widget pl-lg-5 pl-0">
                             <h4>Newsletter</h4>
@@ -428,15 +399,12 @@
                                 <button type="submit" class="btn btn-primary w-100">Submit</button>
                             </form>
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </footer>
     </div>
     </div>
-    <!-- External JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/popper.min.js') }}"></script>
@@ -448,8 +416,6 @@
         charset="utf-8"></script>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Main JS -->
     <script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
 </body>
 

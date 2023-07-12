@@ -1,9 +1,11 @@
-import random
 import datetime
+import geopy.distance
+import os
+import random
 from flask import Flask, jsonify, render_template, request, redirect, session
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
-import os
+from geopy.geocoders import Nominatim
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'h#3gR52m$Pq56wJ@v^*8x4p$^Sb5&vK9'
@@ -13,10 +15,25 @@ app.config['MYSQL_PASSWORD'] = 'helpings@123'
 app.config['MYSQL_HOST'] = 'dbms-project.mysql.database.azure.com'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_DB'] = 'db'
-mysql = MySQL(app)
-
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+
+mysql = MySQL(app)
+
+
+def get_coordinates(location):
+    geolocator = Nominatim(user_agent="my_app")
+    geocode = geolocator.geocode(location)
+    if geocode:
+        latitude = geocode.latitude
+        longitude = geocode.longitude
+        return latitude, longitude
+    else:
+        return None, None
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 @app.route('/')
@@ -56,7 +73,6 @@ def team():
 
 @app.route('/profile')
 def profile():
-    # Check if the user is logged in
     if 'email' in session:
         email = session['email']
         query = "SELECT u_name, u_email, dob, u_pno, location, u_profile_photo,roles FROM user WHERE u_email = %s"
@@ -135,10 +151,6 @@ def update_profile_picture():
         return jsonify({'success': False, 'error': 'Guest user cannot update profile'})
 
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-
 @app.route('/login', methods=['POST'])
 def login_post():
     email = request.form.get('email')
@@ -187,12 +199,14 @@ def search_temples():
     if 'email' in session:
         temple_name = request.form.get('temple_name')
         cur = mysql.connection.cursor()
-        cur.execute("SELECT t_name, t_add, history FROM temple WHERE t_name LIKE %s", (f"%{temple_name}%",))
+        cur.execute(
+            "SELECT t_name, t_add, history FROM temple WHERE t_name LIKE %s", (f"%{temple_name}%",))
         temples = cur.fetchall()
         cur.close()
         return render_template('temple.html', temples=temples)
     else:
         return redirect('/')
+
 
 @app.route('/temples', methods=['GET', 'POST'])
 def temples():
@@ -200,10 +214,37 @@ def temples():
         search_input = request.form.get('search_input')
         if search_input:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT t_name, t_add, history FROM temple WHERE t_name LIKE %s", (f'%{search_input}%',))
+            cur.execute(
+                "SELECT t_name, t_add, history FROM temple WHERE t_name LIKE %s", (f'%{search_input}%',))
             filtered_temples = cur.fetchall()
-            cur.close()
             return render_template('temple.html', temples=temples, filtered_temples=filtered_temples)
+    if 'email' in session:
+        cur = mysql.connection.cursor()
+        email = session['email']
+        cur.execute("SELECT location FROM user WHERE u_email = %s", (email,))
+        user_location = cur.fetchone()[0]
+        cur.close()
+        u_latitude, u_longitude = get_coordinates(user_location)
+        if u_latitude and u_longitude:
+            coord1 = (u_latitude, u_longitude)
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT t_name, t_add, history FROM temple")
+            temples = cur.fetchall()
+            modified_temples = []
+            for temple in temples:
+                t_latitude, t_longitude = get_coordinates(temple[1])
+                coord2 = (t_latitude, t_longitude)
+                if t_latitude and t_longitude:
+                    temple_distance = geopy.distance.distance(
+                        coord1, coord2).km
+                    if temple_distance == 0:
+                        temple_distance = 0.1
+                    temple_distance = round(temple_distance, 2)
+                    modified_temple = temple + (temple_distance,)
+                    modified_temples.append(modified_temple)
+            modified_temples.sort(key=lambda x: x[-1])
+            cur.close()
+            return render_template('temple.html', temples=modified_temples)
     cur = mysql.connection.cursor()
     cur.execute("SELECT t_name, t_add, history FROM temple")
     temples = cur.fetchall()
@@ -211,18 +252,19 @@ def temples():
     return render_template('temple.html', temples=temples)
 
 
-
 @app.route('/search_centers', methods=['POST'])
 def search_centers():
     if 'email' in session:
         temple_name = request.form.get('temple_name')
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM subsidised_food WHERE s_name LIKE %s", (f"%{temple_name}%",))
+        cur.execute(
+            "SELECT * FROM subsidised_food WHERE s_name LIKE %s", (f"%{temple_name}%",))
         temples = cur.fetchall()
         cur.close()
         return render_template('subsidised.html', subsidized_centers=temples)
     else:
         return redirect('/')
+
 
 @app.route('/subsidised', methods=['GET', 'POST'])
 def subsidised():
@@ -230,17 +272,43 @@ def subsidised():
         search_input = request.form.get('search_input')
         if search_input:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT * FROM subsidised_food WHERE s_name LIKE %s", (f'%{search_input}%',))
+            cur.execute(
+                "SELECT * FROM subsidised_food WHERE s_name LIKE %s", (f'%{search_input}%',))
             filtered_temples = cur.fetchall()
             cur.close()
             return render_template('subsidised.html', temples=temples, filtered_temples=filtered_temples)
+    if 'email' in session:
+        cur = mysql.connection.cursor()
+        email = session['email']
+        cur.execute("SELECT location FROM user WHERE u_email = %s", (email,))
+        user_location = cur.fetchone()[0]
+        cur.close()
+        u_latitude, u_longitude = get_coordinates(user_location)
+        if u_latitude and u_longitude:
+            coord1 = (u_latitude, u_longitude)
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM subsidised_food")
+            temples = cur.fetchall()
+            modified_temples = []
+            for temple in temples:
+                t_latitude, t_longitude = get_coordinates(temple[3])
+                coord2 = (t_latitude, t_longitude)
+                if t_latitude and t_longitude:
+                    temple_distance = geopy.distance.distance(
+                        coord1, coord2).km
+                    if temple_distance == 0:
+                        temple_distance = 0.1
+                    temple_distance = round(temple_distance, 2)
+                    modified_temple = temple + (temple_distance,)
+                    modified_temples.append(modified_temple)
+            modified_temples.sort(key=lambda x: x[-1])
+            cur.close()
+            return render_template('subsidised.html', subsidized_centers=modified_temples)
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM subsidised_food")
     temples = cur.fetchall()
     cur.close()
     return render_template('subsidised.html', subsidized_centers=temples)
-
-
 
 
 if __name__ == '__main__':
