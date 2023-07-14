@@ -83,22 +83,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('about') }}">About</a>
                             </li>
-
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Special Dishes
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ url_for('menu') }}">Beef Steak Sauce</a>
-                                    <a class="dropdown-item" href="{{ url_for('menu') }}">Salmon Zucchini</a>
-                                </div>
-                            </li>
                         </div>
                     </ul>
 
                     <a class="navbar-brand navbar-brand-center d-flex align-items-center only-desktop" href="#">
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="">
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" style="height:100px;width:80px  ;">
                     </a>
                     <ul class="navbar-nav d-flex justify-content-between">
                         <div class="d-flex flex-lg-row flex-column">

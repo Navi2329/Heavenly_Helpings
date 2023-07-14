@@ -22,7 +22,12 @@
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
-
+    <style>
+        .img-fluid {
+            width: 290px;
+            height: 386.66px;
+        }
+    </style>
 </head>
 
 <body data-spy="scroll" data-target="#navbar">
@@ -101,7 +106,7 @@
                     </ul>
 
                     <a class="navbar-brand navbar-brand-center d-flex align-items-center only-desktop" href="#">
-                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="">
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" style="height:100px;width:80px  ;">
                     </a>
                     <ul class="navbar-nav d-flex justify-content-between">
                         <div class="d-flex flex-lg-row flex-column">
@@ -149,7 +154,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="team-card mb-5">
-                                <img class="img-fluid" src="{{ url_for('static', filename='img/chef-1.jpg') }}" alt="">
+                                <img class="img-fluid" src="{{ url_for('static', filename='img/Leerish.jpg') }}" alt="">
                                 <div class="team-desc">
                                     <h4 class="mb-0">Leerish Arvind</h4>
                                     <p class="mb-1">Front End Developer</p>
@@ -180,10 +185,10 @@
                         </div>
                         <div class="col-md-4">
                             <div class="team-card mb-5">
-                                <img class="img-fluid" src="{{ url_for('static', filename='img/chef-2.jpg') }}" alt="">
+                                <img class="img-fluid" src="{{ url_for('static', filename='img/Shriman.jpg') }}" alt="">
                                 <div class="team-desc">
                                     <h4 class="mb-0">Shriman K Arun</h4>
-                                    <p class="mb-1">Design</p>
+                                    <p class="mb-1">Design and Front End Developer</p>
                                     <ul class="list-inline mb-0 team-social-links">
                                         <li class="list-inline-item">
                                             <a href="#">
@@ -212,7 +217,7 @@
 
                         <div class="col-md-4">
                             <div class="team-card mb-5">
-                                <img class="img-fluid" src="{{ url_for('static', filename='img/chef-3.jpg') }}" alt="">
+                                <img class="img-fluid" src="{{ url_for('static', filename='img/Navane.jpg') }}" alt="">
                                 <div class="team-desc">
                                     <h4 class="mb-0">Navaneetha Krishnan</h4>
                                     <p class="mb-1">Backend Developer</p>
@@ -243,7 +248,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="team-card mb-5">
-                                <img class="img-fluid" src="{{ url_for('static', filename='img/chef-3.jpg') }}" alt="">
+                                <img class="img-fluid" src="{{ url_for('static', filename='img/Mohnish.jpg') }}" alt="">
                                 <div class="team-desc">
                                     <h4 class="mb-0">Mohnish Karthikeyan</h4>
                                     <p class="mb-1">Backend Developer</p>
