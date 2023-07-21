@@ -12,7 +12,7 @@ app.secret_key = 'h#3gR52m$Pq56wJ@v^*8x4p$^Sb5&vK9'
 
 app.config['MYSQL_USER'] = 'azureuser'
 app.config['MYSQL_PASSWORD'] = 'helpings@123'
-app.config['MYSQL_HOST'] = 'dbms-project.mysql.database.azure.com'
+app.config['MYSQL_HOST'] = 'heavenly-helpings.mysql.database.azure.com'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_DB'] = 'db'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
