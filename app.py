@@ -6,31 +6,38 @@ from flask import Flask, jsonify, render_template, request, redirect, session
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut
 import config
+import time
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'h#3gR52m$Pq56wJ@v^*8x4p$^Sb5&vK9'
 
-app.config['MYSQL_USER'] = os.environ.get('DB_USER') or config.DB_USER
-app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD') or config.DB_PASSWORD
-app.config['MYSQL_HOST'] = os.environ.get('DB_HOST') or config.DB_HOST
+app.config['MYSQL_USER'] = config.DB_USER
+app.config['MYSQL_PASSWORD'] = config.DB_PASSWORD
+app.config['MYSQL_HOST'] = config.DB_HOST
 app.config['MYSQL_PORT'] = 3306
-app.config['MYSQL_DB'] = os.environ.get('DB_NAME') or config.DB_NAME
+app.config['MYSQL_DB'] = config.DB_NAME
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 mysql = MySQL(app)
 
 
-def get_coordinates(location):
+def get_coordinates(location, max_retries=3, timeout=5):
     geolocator = Nominatim(user_agent="my_app")
-    geocode = geolocator.geocode(location)
-    if geocode:
-        latitude = geocode.latitude
-        longitude = geocode.longitude
-        return latitude, longitude
-    else:
-        return None, None
+    retries = 0
+    while retries < max_retries:
+        try:
+            geocode = geolocator.geocode(location, timeout=timeout)
+            if geocode:
+                return geocode.latitude, geocode.longitude
+            else:
+                return None, None
+        except GeocoderTimedOut:
+            retries += 1
+            time.sleep(1)
+    return None, None
 
 
 def allowed_file(filename):
