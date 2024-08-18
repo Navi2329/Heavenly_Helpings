@@ -6,15 +6,16 @@ from flask import Flask, jsonify, render_template, request, redirect, session
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from geopy.geocoders import Nominatim
+import config
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'h#3gR52m$Pq56wJ@v^*8x4p$^Sb5&vK9'
 
-app.config['MYSQL_USER'] = 'azureuser'
-app.config['MYSQL_PASSWORD'] = 'helpings@123'
-app.config['MYSQL_HOST'] = 'dbms-project.mysql.database.azure.com'
+app.config['MYSQL_USER'] = os.environ.get('DB_USER') or config.DB_USER
+app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD') or config.DB_PASSWORD
+app.config['MYSQL_HOST'] = os.environ.get('DB_HOST') or config.DB_HOST
 app.config['MYSQL_PORT'] = 3306
-app.config['MYSQL_DB'] = 'db'
+app.config['MYSQL_DB'] = os.environ.get('DB_NAME') or config.DB_NAME
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
