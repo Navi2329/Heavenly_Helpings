@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temples</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}" />
+  <style>
+    .temple-button {
+      width: 800px;
+      height: auto;
+      margin-bottom: 20px;
+      background-color: transparent;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav id="navbar-header" class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand navbar-brand-center d-flex align-items-center p-0 only-mobile" href="/">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" />
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="lnr lnr-menu"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+        <ul class="navbar-nav d-flex justify-content-between">
+          <li class="nav-item only-desktop">
+            <a class="nav-link" id="side-nav-open" href="#">
+              <span class="lnr lnr-menu"></span>
+            </a>
+          </li>
+          <div class="d-flex flex-lg-row flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('about') }}">About</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ url_for('index') }}">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Our Services
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{{ url_for('temples') }}">Explore Temples Around You</a>
+                <a class="dropdown-item" href="{{ url_for('subsidised') }}">Explore Subsidised food centers Around
+                  You</a>
+              </div>
+            </li>
+          </div>
+        </ul>
+
+        <a class="navbar-brand navbar-brand-center d-flex align-items-center only-desktop" href="#">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" style="height:100px;width:80px  ;">
+        </a>
+        <ul class="navbar-nav d-flex justify-content-between">
+          <div class="d-flex flex-lg-row flex-column">
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ url_for('menu') }}">View Now</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('team') }}">Team</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link" href="{{ url_for('donation') }}">Donate Now</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Profile
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="nav-link" href="{{ url_for('profile') }}">Your Profile</a>
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+              </div>
+            </li>
+          </div>
+          <li class="nav-item">
+            <a id="side-search-open" class="nav-link" href="#">
+              <span class="lnr lnr-magnifier"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Bar -->
+  <section id="search-bar" class="section-padding bg-grey">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <form action="{{ url_for('search_temples') }}" method="POST" class="search-form">
+            <div class="input-group">
+              <input type="text" class="form-control" name="temple_name" placeholder="Search for temples" />
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Search</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Temples List -->
+  <section id="temples-list" class="section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <br>
+          <br>
+          <h2 class="section-title">Available Temples</h2>
+          {% if filtered_temples %}
+          <div class="temple-list">
+            <h3 class="filtered-title">Filtered Temples:</h3>
+            {% for temple in filtered_temples %}
+            <div class="temple-item">
+              <a class="temple-link" href="{{ url_for('menu') }}">
+                <button class="temple-button custom-button">
+                  <h3 class="temple-name">{{ temple[0] }}</h3>
+                  <p class="temple-location">{{ temple[1] }}</p>
+                  <p class="temple-description">{{ temple[2] }}</p>
+                  <p class="temple-distance">{{ temple[3]|round(2) }} km away</p>
+                </button>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="temple-list">
+            <h3 class="all-title">All Temples:</h3>
+            {% for temple in temples %}
+            <div class="temple-item">
+              <a class="temple-link" href="{{ url_for('menu') }}">
+                <button class="temple-button custom-button">
+                  <h3 class="temple-name">{{ temple[0] }}</h3>
+                  <p class="temple-location">{{ temple[1] }}</p>
+                  <p class="temple-description">{{ temple[2] }}</p>
+                  {% if temple[3] %}
+                  <p class="temple-distance">{{ temple[3]|round(2) }} km away</p>
+                  {% endif %}
+                </button>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.js') }}"></script>
+</body>
+
+</html>
